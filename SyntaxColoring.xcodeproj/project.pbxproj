@@ -16,7 +16,7 @@
 		EF915AE72058A8D100828B62 /* SCAltKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = EF915ADE2058A8D100828B62 /* SCAltKeyboard.m */; };
 		EF915AE82058A8D100828B62 /* SCAltKeyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = EF915ADF2058A8D100828B62 /* SCAltKeyboard.h */; };
 		EF915AE92058A8D100828B62 /* SCTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = EF915AE02058A8D100828B62 /* SCTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EF915AEA2058A8D100828B62 /* SCSyntaxScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = EF915AE12058A8D100828B62 /* SCSyntaxScanner.h */; };
+		EF915AEA2058A8D100828B62 /* SCSyntaxScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = EF915AE12058A8D100828B62 /* SCSyntaxScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,8 +96,8 @@
 			files = (
 				EF915AE52058A8D100828B62 /* SCSyntaxTextStorage.h in Headers */,
 				EF915AE92058A8D100828B62 /* SCTextView.h in Headers */,
-				EF915ACC2058A69700828B62 /* SyntaxColoring.h in Headers */,
 				EF915AEA2058A8D100828B62 /* SCSyntaxScanner.h in Headers */,
+				EF915ACC2058A69700828B62 /* SyntaxColoring.h in Headers */,
 				EF915AE22058A8D100828B62 /* SCCScanner.h in Headers */,
 				EF915AE82058A8D100828B62 /* SCAltKeyboard.h in Headers */,
 			);

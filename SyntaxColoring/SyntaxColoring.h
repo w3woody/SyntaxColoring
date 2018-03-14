@@ -18,4 +18,5 @@ FOUNDATION_EXPORT const unsigned char SyntaxColoringVersionString[];
 
 
 #import <SyntaxColoring/SCTextView.h>
+#import <SyntaxColoring/SCSyntaxScanner.h>
 

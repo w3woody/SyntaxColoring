@@ -77,11 +77,26 @@
 	self.textView.inputAccessoryView = self.scrollView;
 
 	[self addSubview:self.textView];
+
+	NSDictionary *d = @{ @"textView": self.textView };
+	NSArray<NSLayoutConstraint *> *c;
+
+	self.textView.translatesAutoresizingMaskIntoConstraints = NO;
+	c = [NSLayoutConstraint constraintsWithVisualFormat:@"|[textView]|" options:0 metrics:nil views:d];
+	[NSLayoutConstraint activateConstraints:c];
+	c = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[textView]|" options:0 metrics:nil views:d];
+	[NSLayoutConstraint activateConstraints:c];
 }
 
-- (void)layoutSubviews
+//- (void)layoutSubviews
+//{
+//	self.textView.frame = self.bounds;
+//}
+
+- (void)setSyntaxScanner:(id<SCSyntaxScanner>)scanner;
 {
-	self.textView.frame = self.bounds;
+	self.scanner = scanner;
+	self.storage.scanner = scanner;
 }
 
 /*

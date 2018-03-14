@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol SCSyntaxScanner;
+
 @interface SCTextView : UIView
 
 - (UITextView *)textView;
+- (void)setSyntaxScanner:(id<SCSyntaxScanner>)scanner;
 
 @end
