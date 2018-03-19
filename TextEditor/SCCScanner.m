@@ -18,12 +18,14 @@
 	NSInteger start;
 	NSInteger len;
 	NSString *string;
+	BOOL atSOL;
 
 	/*
 	 *	Reserved tokens
 	 */
 
 	NSSet<NSString *> *reserved;
+	NSSet<NSString *> *preproc;
 
 	/*
 	 *	Scanned range
@@ -43,6 +45,7 @@
 #define NUMBER		-4
 #define TOKEN		-5
 #define RESTOKEN	-6
+#define PREPROC		-7
 
 @implementation SCCScanner
 
@@ -84,7 +87,25 @@
 		[set addObject:@"case"];
 		[set addObject:@"default"];
 
-		reserved = set;
+		reserved = [NSSet setWithSet:set];
+
+		set = [[NSMutableSet alloc] init];
+
+		[set addObject:@"include"];
+		[set addObject:@"define"];
+		[set addObject:@"undef"];
+		[set addObject:@"if"];
+		[set addObject:@"ifdef"];
+		[set addObject:@"ifndef"];
+		[set addObject:@"elif"];
+		[set addObject:@"else"];
+		[set addObject:@"endif"];
+		[set addObject:@"line"];
+		[set addObject:@"error"];
+		[set addObject:@"warning"];
+		[set addObject:@"pragma"];
+
+		preproc = [NSSet setWithSet:set];
 	}
 	return self;
 }
@@ -183,6 +204,31 @@ static BOOL IsNumber(NSInteger ch)
 	ch = [self nextChar];
 	if (ch == EOF) return EOF;
 
+	/*
+	 *	Pull preprocessor only if at start of line
+	 */
+
+	if (atSOL && (ch == '#')) {
+		atSOL = NO;
+
+		ch = [self readNextChar];
+		while (isspace(ch)) {
+			ch = [self readNextChar];
+		}
+
+		NSInteger pos = start - 1;
+		while ((ch == '_') || IsAlNum(ch)) {
+			ch = [self readNextChar];
+		}
+		if (ch != EOF) [self pushBackChar];
+
+		NSString *str = [string substringWithRange:NSMakeRange(pos, start - pos)];
+		if ([preproc containsObject:str]) return PREPROC;
+		return TOKEN;
+	}
+
+	atSOL = NO;
+
 	if ((ch == '"') || (ch == '\'')) {
 		for (;;) {
 			NSInteger d = [self readNextChar];
@@ -234,6 +280,10 @@ static BOOL IsNumber(NSInteger ch)
 		return NUMBER;
 	}
 
+	if (ch == '\n') {
+		atSOL = YES;
+	}
+
 	return ch;
 }
 
@@ -248,6 +298,7 @@ static BOOL IsNumber(NSInteger ch)
 	UIColor *commentColor = [UIColor redColor];
 	UIColor *strColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1.0];
 	UIColor *tokenColor = [UIColor blueColor];
+	UIColor *preprocColor = [UIColor colorWithRed:0.5 green:0 blue:0.5 alpha:1.0];
 
 	/*
 	 *	Step 1: grow range to encompass comment regions
@@ -256,6 +307,7 @@ static BOOL IsNumber(NSInteger ch)
 	string = str.string;
 	range.location = 0;
 	range.length = string.length;	/* TODO */
+	atSOL = YES;
 
 	/*
 	 *	Step 2: remove old attributes in range
@@ -281,6 +333,8 @@ static BOOL IsNumber(NSInteger ch)
 			[str addAttribute:NSForegroundColorAttributeName value:strColor range:NSMakeRange(pos,start-pos)];
 		} else if (t == COMMENT) {
 			[str addAttribute:NSForegroundColorAttributeName value:commentColor range:NSMakeRange(pos,start-pos)];
+		} else if (t == PREPROC) {
+			[str addAttribute:NSForegroundColorAttributeName value:preprocColor range:NSMakeRange(pos,start-pos)];
 		}
 
 		pos = start;
