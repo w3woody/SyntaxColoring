@@ -212,7 +212,7 @@ static BOOL IsNumber(NSInteger ch)
 		atSOL = NO;
 
 		ch = [self readNextChar];
-		while (isspace(ch)) {
+		while (isspace((int)ch)) {
 			ch = [self readNextChar];
 		}
 
